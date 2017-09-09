@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".act.XiangQingLieBiaoMainActivity">
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:background="#FF5001"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/huichuan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_action_back"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            />
+
+
+
+        <EditText
+            android:id="@+id/button_search"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textSize="15sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="12"
+            android:text="搜索一下"
+            android:textColor="#D0ABA1"
+            android:background="#DD3000"
+            />
+
+        <ImageView
+
+            android:id="@+id/normal_message"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_action_search"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="45dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/zhonghepaixu"
+            android:text="综合排序"
+            android:textSize="20sp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/xiaoliangyouxian"
+            android:text="销量优先"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/saixuan"
+            android:text="筛选"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:gravity="center" />
+        <ImageView
+            android:id="@+id/qiehuan"
+            android:background="@mipmap/ic_goods_list_hor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:layout_marginLeft="30dp"/>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+</LinearLayout>
