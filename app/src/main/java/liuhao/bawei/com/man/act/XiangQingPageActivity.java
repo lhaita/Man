@@ -1,10 +1,7 @@
 package liuhao.bawei.com.man.act;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +10,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +32,10 @@ import java.util.List;
 import liuhao.bawei.com.man.R;
 import liuhao.bawei.com.man.adapter.MyPhotoFragment;
 import liuhao.bawei.com.man.adapter.RecyclerviewTwoAdapter;
+import liuhao.bawei.com.man.app.Myapp;
 import liuhao.bawei.com.man.bean.BaseBean;
+import liuhao.bawei.com.man.bean.User;
+import liuhao.bawei.com.man.bean.UserDao;
 import liuhao.bawei.com.man.bean.XiangQingBean;
 import liuhao.bawei.com.man.fragment.Photofragment;
 import liuhao.bawei.com.man.net.HttpXutils;
@@ -60,7 +58,7 @@ public class XiangQingPageActivity extends AppCompatActivity {
     private RecyclerView rec;
     private LinearLayout linearLayout;
     private LinearLayout ll;
-
+    private int i = 1 ;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xiang_qing_page);
@@ -87,7 +85,8 @@ public class XiangQingPageActivity extends AppCompatActivity {
             @Override
             public void onsuccess(BaseBean baseBean) {
                 XiangQingBean baseBean1 = (XiangQingBean) baseBean;
-                final  XiangQingBean.DatasBean.GoodsInfoBean goods_info = baseBean1.getDatas().getGoods_info();
+                final XiangQingBean.DatasBean.StoreInfoBean store_info = baseBean1.getDatas().getStore_info();
+                final XiangQingBean.DatasBean.GoodsInfoBean goods_info = baseBean1.getDatas().getGoods_info();
                 tvllsname.setText(goods_info.getGoods_name());
                 tvllsgj.setText(goods_info.getGoods_jingle());
                 tvllsmoney.setText("￥"+goods_info.getGoods_price());
@@ -129,13 +128,13 @@ public class XiangQingPageActivity extends AppCompatActivity {
                 linearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        initPop(goods_info,spec_image);
+                        initPop(goods_info,spec_image,store_info);
                     }
                 });
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        initPop(goods_info,spec_image);
+                        initPop(goods_info,spec_image,store_info);
                     }
                 });
             }
@@ -143,7 +142,7 @@ public class XiangQingPageActivity extends AppCompatActivity {
 
     }
     //初始化PopWindow
-    public void initPop(XiangQingBean.DatasBean.GoodsInfoBean goods_info,List<String> spec_image){
+    public void initPop(final XiangQingBean.DatasBean.GoodsInfoBean goods_info, final List<String> spec_image, final XiangQingBean.DatasBean.StoreInfoBean store_info){
         View view1 = View.inflate(XiangQingPageActivity.this,R.layout.popwindow_layout,null);
         PopupWindow window = new PopupWindow(view1,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -168,16 +167,11 @@ public class XiangQingPageActivity extends AppCompatActivity {
         final Button jia = view1.findViewById(R.id.jia);
         final Button jian = view1.findViewById(R.id.jian);
         final EditText jisuan = view1.findViewById(R.id.jisuan);
-        Button btngoumai = view1.findViewById(R.id.shopcar);
+        Button gouwuche = view1.findViewById(R.id.shopcar);
         //点击将该页面的详情信息保存数据库
-        btngoumai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
 
 
-            }
-        });
         jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,15 +201,11 @@ public class XiangQingPageActivity extends AppCompatActivity {
                     jisuan.setText(integer+"");
                     if(integer<=1){
                         //吐司事件
-                        Toast.makeText(XiangQingPageActivity.this, "没有了!",Toast.LENGTH_SHORT).show();
                         jisuan.setText("1");
-
                     }
                 }else {
-
                     //吐司事件
                     Toast.makeText(XiangQingPageActivity.this, "输入不能为空",Toast.LENGTH_SHORT).show();
-
                 }
 
             }
@@ -225,13 +215,32 @@ public class XiangQingPageActivity extends AppCompatActivity {
         tename.setText(goods_info.getGoods_name());
         String s = spec_image.get(0);
         String[] split = s.split(JIEkou.yip);
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append(JIEkou.ip);
         for (String b : split){
             sb.append(b);
         }
         ImageLoader.getInstance().displayImage(sb.toString(),image);
+        gouwuche.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                Myapp myapp = (Myapp) getApplication();
+                UserDao db = myapp.getDb();
+
+                User user = new User();
+                user.setName(goods_info.getGoods_name());
+                user.setImage_url(sb.toString());
+                user.setPrice(goods_info.getGoods_price());
+                user.setNum(jisuan.getText().toString());
+                user.setShopname(store_info.getStore_name());
+                long insert = db.insert(user);
+                if(insert != -1){
+                    //吐司事件
+                    Toast.makeText(XiangQingPageActivity.this, "加入购物车成功",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
     //初始化UI

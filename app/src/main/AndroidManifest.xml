@@ -14,15 +14,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".act.MainActivity"></activity>
-        <activity android:name=".act.GuideActivity" />
-        <activity android:name=".act.SearchActivity" />
-        <activity android:name=".act.XiangQingLieBiaoMainActivity">
+        <activity android:name=".act.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity android:name=".act.GuideActivity" />
+        <activity android:name=".act.SearchActivity" />
+        <activity android:name=".act.XiangQingLieBiaoMainActivity">
+
         </activity>
         <activity android:name=".act.WebMainActivity" />
         <activity android:name=".act.XiangQingPageActivity"></activity>

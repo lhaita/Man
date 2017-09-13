@@ -1,6 +1,7 @@
 package liuhao.bawei.com.man.app;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -13,6 +14,9 @@ import org.xutils.BuildConfig;
 import org.xutils.x;
 
 import liuhao.bawei.com.man.R;
+import liuhao.bawei.com.man.bean.DaoMaster;
+import liuhao.bawei.com.man.bean.DaoSession;
+import liuhao.bawei.com.man.bean.UserDao;
 import liuhao.bawei.com.man.net.HttpUtils;
 
 /**
@@ -22,6 +26,7 @@ public class Myapp extends Application {
 
     private HttpUtils httpUtils;
     private ImageLoader instance;
+    private UserDao db;
 
     @Override
     public void onCreate() {
@@ -51,10 +56,17 @@ public class Myapp extends Application {
         instance = ImageLoader.getInstance();
         instance.init(i);
 
-
+        //初始化数据库
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(this,"user.db");
+        SQLiteDatabase writableDatabase = devOpenHelper.getWritableDatabase();
+        DaoMaster dao = new DaoMaster(writableDatabase);
+        DaoSession daoSession = dao.newSession();
+        db = daoSession.getUserDao();
 
     }
-
+    public UserDao getDb() {
+        return db;
+    }
     public ImageLoader getInstance() {
         return instance;
     }
