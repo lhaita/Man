@@ -59,6 +59,7 @@ public class XiangQingPageActivity extends AppCompatActivity {
     private RelativeLayout relativeLayout;
     private RecyclerView rec;
     private LinearLayout linearLayout;
+    private LinearLayout ll;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,13 +87,13 @@ public class XiangQingPageActivity extends AppCompatActivity {
             @Override
             public void onsuccess(BaseBean baseBean) {
                 XiangQingBean baseBean1 = (XiangQingBean) baseBean;
-                final XiangQingBean.DatasBean.GoodsInfoBean goods_info = baseBean1.getDatas().getGoods_info();
+                final  XiangQingBean.DatasBean.GoodsInfoBean goods_info = baseBean1.getDatas().getGoods_info();
                 tvllsname.setText(goods_info.getGoods_name());
                 tvllsgj.setText(goods_info.getGoods_jingle());
                 tvllsmoney.setText("￥"+goods_info.getGoods_price());
                 tvxiaoliang.setText("销量:" + goods_info.getGoods_salenum() + "件");
                 //初始化viewpager的数据
-                final List<String> spec_image = baseBean1.getDatas().getSpec_image();
+                final   List<String> spec_image = baseBean1.getDatas().getSpec_image();
 //                lists.addAll(spec_image);
 
                 for (int i = 0 ; i < spec_image.size() ; i ++){
@@ -126,94 +127,114 @@ public class XiangQingPageActivity extends AppCompatActivity {
                     }
                 });
                 linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @TargetApi(Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onClick(View view) {
-                        View view1 = View.inflate(XiangQingPageActivity.this,R.layout.popwindow_layout,null);
-                        PopupWindow window = new PopupWindow(view1,
-                                WindowManager.LayoutParams.MATCH_PARENT,
-                                350);
-                        // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
-                        window.setFocusable(true);
-                        window.setOutsideTouchable(true);
-                        // 实例化一个ColorDrawable颜色为半透明
-                        ColorDrawable dw = new ColorDrawable(0xb0000000);
-                        window.setBackgroundDrawable(dw);
-                        // 设置popWindow的显示和消失动画
-                        window.setAnimationStyle(R.style.mypopwindow_anim_style);
-                        // 在底部显示
-                        window.showAtLocation(view1,
-                                Gravity.BOTTOM, 0, 0);
-
-
-                        ImageView image = view1.findViewById(R.id.recyclerimg);
-                        TextView tename = view1.findViewById(R.id.recyclername);
-                        TextView temoney = view1.findViewById(R.id.recyclermoney);
-                        TextView num = view1.findViewById(R.id.recyclersalenum);
-                        final Button jia = view1.findViewById(R.id.jia);
-                        final Button jian = view1.findViewById(R.id.jian);
-                        final EditText jisuan = view1.findViewById(R.id.jisuan);
-                        jia.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String num =  jisuan.getText().toString();
-
-                                    int integer = Integer.valueOf(num);
-                                    if(integer>=100){
-                                        //吐司事件
-                                        Toast.makeText(XiangQingPageActivity.this, "购买数量不能大于100件!",Toast.LENGTH_SHORT).show();
-                                        jisuan.setText("100");
-
-                                }{
-                                    integer= integer+1;
-                                    jisuan.setText(integer+"");
-                                }
-
-                            }
-                        });
-                        jian.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String num =  jisuan.getText().toString();
-                                if(num!=null&!num.equals("")){
-
-                                    int integer = Integer.valueOf(num);
-                                    integer = integer-1;
-                                    jisuan.setText(integer+"");
-                                    if(integer<=1){
-                                        //吐司事件
-                                        Toast.makeText(XiangQingPageActivity.this, "没有了!",Toast.LENGTH_SHORT).show();
-                                        jisuan.setText("1");
-
-                                    }
-                                }else {
-
-                                    //吐司事件
-                                    Toast.makeText(XiangQingPageActivity.this, "输入不能为空",Toast.LENGTH_SHORT).show();
-
-                                }
-
-                            }
-                        });
-                        num.setText("库存 : "+goods_info.getGoods_storage());
-                        temoney.setText("￥"+goods_info.getGoods_price());
-                        tename.setText(goods_info.getGoods_name());
-                        String s = spec_image.get(0);
-                        String[] split = s.split(JIEkou.yip);
-                        StringBuffer sb = new StringBuffer();
-                        sb.append(JIEkou.ip);
-                        for (String b : split){
-                            sb.append(b);
-                        }
-                        ImageLoader.getInstance().displayImage(sb.toString(),image);
+                        initPop(goods_info,spec_image);
+                    }
+                });
+                ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        initPop(goods_info,spec_image);
                     }
                 });
             }
         });
 
     }
+    //初始化PopWindow
+    public void initPop(XiangQingBean.DatasBean.GoodsInfoBean goods_info,List<String> spec_image){
+        View view1 = View.inflate(XiangQingPageActivity.this,R.layout.popwindow_layout,null);
+        PopupWindow window = new PopupWindow(view1,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                350);
+        // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
+        window.setFocusable(true);
+        window.setOutsideTouchable(true);
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        window.setBackgroundDrawable(dw);
+        // 设置popWindow的显示和消失动画
+        window.setAnimationStyle(R.style.mypopwindow_anim_style);
+        // 在底部显示
+        window.showAtLocation(view1,
+                Gravity.BOTTOM, 0, 0);
 
 
+        ImageView image = view1.findViewById(R.id.recyclerimg);
+        TextView tename = view1.findViewById(R.id.recyclername);
+        TextView temoney = view1.findViewById(R.id.recyclermoney);
+        TextView num = view1.findViewById(R.id.recyclersalenum);
+        final Button jia = view1.findViewById(R.id.jia);
+        final Button jian = view1.findViewById(R.id.jian);
+        final EditText jisuan = view1.findViewById(R.id.jisuan);
+        Button btngoumai = view1.findViewById(R.id.shopcar);
+        //点击将该页面的详情信息保存数据库
+        btngoumai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+            }
+        });
+        jia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String num =  jisuan.getText().toString();
+
+                int integer = Integer.valueOf(num);
+                if(integer>=100){
+                    //吐司事件
+                    Toast.makeText(XiangQingPageActivity.this, "购买数量不能大于100件!",Toast.LENGTH_SHORT).show();
+                    jisuan.setText("100");
+
+                }{
+                    integer= integer+1;
+                    jisuan.setText(integer+"");
+                }
+
+            }
+        });
+        jian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String num =  jisuan.getText().toString();
+                if(num!=null&!num.equals("")){
+
+                    int integer = Integer.valueOf(num);
+                    integer = integer-1;
+                    jisuan.setText(integer+"");
+                    if(integer<=1){
+                        //吐司事件
+                        Toast.makeText(XiangQingPageActivity.this, "没有了!",Toast.LENGTH_SHORT).show();
+                        jisuan.setText("1");
+
+                    }
+                }else {
+
+                    //吐司事件
+                    Toast.makeText(XiangQingPageActivity.this, "输入不能为空",Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        });
+        num.setText("库存 : "+goods_info.getGoods_storage());
+        temoney.setText("￥"+goods_info.getGoods_price());
+        tename.setText(goods_info.getGoods_name());
+        String s = spec_image.get(0);
+        String[] split = s.split(JIEkou.yip);
+        StringBuffer sb = new StringBuffer();
+        sb.append(JIEkou.ip);
+        for (String b : split){
+            sb.append(b);
+        }
+        ImageLoader.getInstance().displayImage(sb.toString(),image);
+
+
+    }
+    //初始化UI
     private void initview() {
 
         tvllsname = (TextView) findViewById(R.id.tvllsname);
@@ -225,7 +246,7 @@ public class XiangQingPageActivity extends AppCompatActivity {
         rec = (RecyclerView) findViewById(R.id.lv);
         vip = (ViewPager) findViewById(R.id.vp);
         linearLayout = (LinearLayout) findViewById(R.id.linadd);
-
+        ll = (LinearLayout) findViewById(R.id.linlijigoumai);
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
